@@ -1,0 +1,24 @@
+# REVERSE PROXY IS IN OTHER DOCKER COMPOSE STACK
+
+# #Jellyfin - used to display the media
+# #This can also be replaced by Emby/Plex
+# jellyfin:
+#   image: ghcr.io/linuxserver/jellyfin:latest
+#   container_name: jellyfin
+#   environment:
+#     - JELLYFIN_PublishedServerUrl=${JELLYFIN_URL}
+#     - PUID=${PUID}
+#     - PGID=${PGID}
+#   ports:
+#     - 8096:8096
+#     - 8920:8920
+#   devices:
+#    - /dev/dri:/dev/dri #Required for jellyfin HW transcoding / QuickSync
+#   volumes:
+#     - ${BASE_PATH}/jellyfin/config:/config
+#     - ${MEDIA_SHARE}/media:/media
+#     - ${BASE_PATH}/swag/config/keys/letsencrypt:/certificates
+#   restart: unless-stopped
+#   networks:
+#     - proxy
+#     - starr
