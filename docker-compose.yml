@@ -101,6 +101,20 @@ services:
     networks:
       - starr
 
+  homarr:
+    container_name: homarr
+    image: ghcr.io/homarr-labs/homarr:latest
+    restart: unless-stopped
+    volumes:
+      #- /var/run/docker.sock:/var/run/docker.sock # Optional, only if you want docker integration
+      - ${BASE_PATH}/homarr/configs:/app/data/configs
+      - ${BASE_PATH}/homarr/icons:/app/public/icons
+      - ${BASE_PATH}/homarr/data:/data
+    ports:
+      - 80:7575
+    networks:
+      - starr
+
   # #Unpacker - Used to unzip zipped files
   # unpackerr:
   #   image: ghcr.io/hotio/unpackerr:latest

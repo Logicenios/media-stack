@@ -1,6 +1,7 @@
 services:
   hello-world:
     image: hello-world
+    restart: unless-stopped
     networks:
       starr:
         ipv4_address: 172.20.0.14
