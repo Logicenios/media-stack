@@ -1,0 +1,13 @@
+services:
+  hello-world:
+    image: hello-world
+    networks:
+      custom_network:
+        ipv4_address: 172.20.0.26
+
+networks:
+  starr:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/28 # IP range for the network

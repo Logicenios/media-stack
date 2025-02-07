@@ -14,7 +14,6 @@ services:
     ports:
       - 7878:7878
     networks:
-      - proxy
       - starr
     restart: unless-stopped
 
@@ -32,7 +31,6 @@ services:
     ports:
       - 8989:8989
     networks:
-      - proxy
       - starr
     restart: unless-stopped
 
@@ -50,7 +48,6 @@ services:
     ports:
       - 8686:8686
     networks:
-      - proxy
       - starr
     restart: unless-stopped
 
@@ -58,31 +55,17 @@ services:
   prowlarr:
     image: lscr.io/linuxserver/prowlarr:latest
     container_name: prowlarr
-    network_mode: "service:gluetun"
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
       - TZ=${TZ}
     volumes:
       - ${BASE_PATH}/prowlarr/config:/config
-    restart: unless-stopped
-
-  #Autobrr - used to grab torrents using the trackers IRC channel - Increases seeding due to grabbing content before RSS feed
-  autobrr:
-    container_name: autobrr
-    image: ghcr.io/autobrr/autobrr:latest
-    restart: unless-stopped
-    environment:
-      - TZ=${TZ}
-      - PUID=${PUID}
-      - PGID=${PGID}
-    volumes:
-      - ${BASE_PATH}/autobrr/config:/config
     ports:
-      - 7474:7474
+      - 9696:9696
     networks:
-      - proxy
       - starr
+    restart: unless-stopped
 
   #jellyseer - allows users to request media on their own
   jellyseerr:
@@ -96,29 +79,9 @@ services:
       - ${BASE_PATH}/jellyseerr/config:/app/config
       - ${MEDIA_SHARE}:/data #Access to the entire ${BASE_PATH}
     networks:
-      - proxy
       - starr
     ports:
       - 5055:5055
-    restart: unless-stopped
-
-  #Qbittorent - torrenting software
-  #
-  #You can also use RuTorrent, Transmisson or Deluge
-  qbittorrent:
-    image: lscr.io/linuxserver/qbittorrent:latest
-    container_name: qbittorrent
-    network_mode: "service:gluetun"
-    environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
-      - TZ=${TZ}
-      - WEBUI_PORT=8080
-      - TORRENTING_PORT=8694 #Make sure to port forward this port in your router so you can seed more effectively
-      - UMASK=002
-    volumes:
-      - ${BASE_PATH}/qbittorent/config:/config
-      - ${MEDIA_SHARE}:/data
     restart: unless-stopped
 
   #Bazarr - for subtitles. Try to use SRT format if you can rather than PGS due to performance issues
@@ -137,26 +100,6 @@ services:
       - 6767:6767
     networks:
       - starr
-      - proxy
-
-  #Cross Seed - used to take torrents from one tracker and seed them on another without leeching first. Increases ratio
-  #
-  #This is fairly advanced but can be removed if you don't think you will need it. Some trackers also don't allow this
-  cross-seed:
-    image: ghcr.io/cross-seed/cross-seed:latest
-    container_name: cross-seed
-    network_mode: "service:gluetun"
-    user: ${PUID}:${PGID}
-    environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
-    volumes:
-      - ${BASE_PATH}/cross-seed/config:/config #To configure you have to manually nano the config file
-      - ${BASE_PATH}/qbittorent/config/qBittorrent/BT_backup:/torrents:ro # your torrent clients .torrent cache, can and should be mounted read-only (e.g. qbit: `BT_Backup` | deluge: `state` | transmission: `transmission/torrents` | rtorrent: session dir from `.rtorrent.rc`)
-      - ${MEDIA_SHARE}/torrents/cross-seed:/data/cross-seeds
-      # - ${MEDIA_SHARE}/cross-seed/current-cross-seeds:/data/cross-seeds # A place to temp save current cross seed .torrent files
-      #- ${MEDIA_SHARE}/downloads:/data # OPTIONAL!!! this is dataDir path (for data-based matching) - will need to replicate your torrent client's container path (like Arr's do)
-    command: daemon # this enables the search mode, change to daemon to specifically run the daemon
 
   #Unpacker - Used to unzip zipped files
   unpackerr:
@@ -166,14 +109,14 @@ services:
       # You need at least this one volume mapped so Unpackerr can find your files to extract.
       # Make sure this matches your Starr apps; the folder mount (/downloads or /data) should be identical.
       - ${MEDIA_SHARE}:/data
-      #- ${BASE_PATH}/unpackerr/config:/config
-    restart: always
+      - ${BASE_PATH}/unpackerr/config:/config
+    restart: unless-stopped
     # What you see below are defaults for this compose. You only need to modify things specific to your environment.
     # Remove apps and feature configs you do not use or need.
     # ie. Remove all lines that begin with UN_CMDHOOK, UN_WEBHOOK, UN_FOLDER, UN_WEBSERVER, and other apps you do not use.
     environment:
-      - PUID=1000
-      - PGID=1000
+      - PUID=${PUID}
+      - PGID=${PGID}
       - UN_START_DELAY=1m
       - UMASK=002
       - TZ=${TZ}
@@ -196,7 +139,7 @@ services:
   decluttarr:
     image: ghcr.io/manimatter/decluttarr:latest
     container_name: decluttarr
-    restart: always
+    restart: unless-stopped
     environment:
       TZ: ${TZ}
       PUID: ${PUID}
@@ -242,12 +185,11 @@ services:
       READARR_URL: http://readarr:8787
       READARR_KEY: $READARR_KEY
       ## qBitorrent
-      QBITTORRENT_URL: http://gluetun:8080
+      QBITTORRENT_URL: http://qbittorrent:8080
       QBITTORRENT_USERNAME: $QBIT_USER
       QBITTORRENT_PASSWORD: $QBIT_PASS
     networks:
       - starr
-      - proxy
 
 networks:
   proxy:

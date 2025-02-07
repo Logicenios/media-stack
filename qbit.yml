@@ -1,0 +1,25 @@
+services:
+  #Qbittorent - torrenting software
+  qbittorrent:
+    image: lscr.io/linuxserver/qbittorrent:latest
+    container_name: qbittorrent
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      #- UMASK=002
+      - TZ=${TZ}
+      - WEBUI_PORT=8080
+      - TORRENTING_PORT=8694
+    volumes:
+      - ${BASE_PATH}/qbittorent/config:/config
+      - ${MEDIA_SHARE}:/data
+    ports:
+      - 8080:8080 #WebUI port
+      - 62418:8694 #Torrenting port
+    networks:
+      - starr
+    restart: unless-stopped
+
+networks:
+  starr:
+    external: true
