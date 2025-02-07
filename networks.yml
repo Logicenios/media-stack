@@ -2,7 +2,7 @@ services:
   hello-world:
     image: hello-world
     networks:
-      custom_network:
+      starr:
         ipv4_address: 172.20.0.26
 
 networks:
