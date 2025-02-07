@@ -8,7 +8,9 @@ services:
 networks:
   starr:
     driver: bridge
+    name: starr
     ipam:
+      driver: default
       config:
         - subnet: 172.20.0.0/28 # IP range for the network
-        - gateway: 172.20.0.1
+          gateway: 172.20.0.1
