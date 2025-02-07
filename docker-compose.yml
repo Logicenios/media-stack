@@ -101,98 +101,96 @@ services:
     networks:
       - starr
 
-  #Unpacker - Used to unzip zipped files
-  unpackerr:
-    image: ghcr.io/hotio/unpackerr:latest
-    container_name: unpackerr
-    volumes:
-      # You need at least this one volume mapped so Unpackerr can find your files to extract.
-      # Make sure this matches your Starr apps; the folder mount (/downloads or /data) should be identical.
-      - ${MEDIA_SHARE}:/data
-      - ${BASE_PATH}/unpackerr/config:/config
-    restart: unless-stopped
-    # What you see below are defaults for this compose. You only need to modify things specific to your environment.
-    # Remove apps and feature configs you do not use or need.
-    # ie. Remove all lines that begin with UN_CMDHOOK, UN_WEBHOOK, UN_FOLDER, UN_WEBSERVER, and other apps you do not use.
-    environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
-      - UN_START_DELAY=1m
-      - UMASK=002
-      - TZ=${TZ}
-      #- UN_DEBUG=true
-      # Sonarr Config
-      - UN_SONARR_0_URL=http://sonarr:8989
-      - UN_SONARR_0_API_KEY=${SONARR_KEY}
-      #- UN_SONARR_0_PATHS_0=/${BASE_PATH}/downloads/shows
-      - UN_SONARR_0_TIMEOUT=10s
-      #- UN_SONARR_0_PATHS_0=/${BASE_PATH}/downloads/shows
-      # Radarr Config
-      - UN_RADARR_0_URL=http://radarr:7878
-      - UN_RADARR_0_API_KEY=${RADARR_KEY}
-      #- UN_RADARR_0_PATHS_0=/${BASE_PATH}/downloads/movies
-      - UN_RADARR_0_TIMEOUT=10s
-      #- UN_RADARR_0_PATHS_0=/${BASE_PATH}/downloads/movies
-    networks:
-      - starr
+  # #Unpacker - Used to unzip zipped files
+  # unpackerr:
+  #   image: ghcr.io/hotio/unpackerr:latest
+  #   container_name: unpackerr
+  #   volumes:
+  #     # You need at least this one volume mapped so Unpackerr can find your files to extract.
+  #     # Make sure this matches your Starr apps; the folder mount (/downloads or /data) should be identical.
+  #     - ${MEDIA_SHARE}:/data
+  #     - ${BASE_PATH}/unpackerr/config:/config
+  #   restart: unless-stopped
+  #   # What you see below are defaults for this compose. You only need to modify things specific to your environment.
+  #   # Remove apps and feature configs you do not use or need.
+  #   # ie. Remove all lines that begin with UN_CMDHOOK, UN_WEBHOOK, UN_FOLDER, UN_WEBSERVER, and other apps you do not use.
+  #   environment:
+  #     - PUID=${PUID}
+  #     - PGID=${PGID}
+  #     - UN_START_DELAY=1m
+  #     - UMASK=002
+  #     - TZ=${TZ}
+  #     #- UN_DEBUG=true
+  #     # Sonarr Config
+  #     - UN_SONARR_0_URL=http://sonarr:8989
+  #     - UN_SONARR_0_API_KEY=${SONARR_KEY}
+  #     #- UN_SONARR_0_PATHS_0=/${BASE_PATH}/downloads/shows
+  #     - UN_SONARR_0_TIMEOUT=10s
+  #     #- UN_SONARR_0_PATHS_0=/${BASE_PATH}/downloads/shows
+  #     # Radarr Config
+  #     - UN_RADARR_0_URL=http://radarr:7878
+  #     - UN_RADARR_0_API_KEY=${RADARR_KEY}
+  #     #- UN_RADARR_0_PATHS_0=/${BASE_PATH}/downloads/movies
+  #     - UN_RADARR_0_TIMEOUT=10s
+  #     #- UN_RADARR_0_PATHS_0=/${BASE_PATH}/downloads/movies
+  #   networks:
+  #     - starr
 
-  decluttarr:
-    image: ghcr.io/manimatter/decluttarr:latest
-    container_name: decluttarr
-    restart: unless-stopped
-    environment:
-      TZ: ${TZ}
-      PUID: ${PUID}
-      PGID: ${PGID}
-      ## General
-      # TEST_RUN=True
-      # SSL_VERIFICATION=False
-      LOG_LEVEL: INFO
-      ## Features
-      REMOVE_TIMER: 10
-      REMOVE_FAILED: True
-      REMOVE_FAILED_IMPORTS: True
-      REMOVE_METADATA_MISSING: True
-      REMOVE_MISSING_FILES: True
-      REMOVE_ORPHANS: True
-      REMOVE_SLOW: True
-      REMOVE_STALLED: True
-      REMOVE_UNMONITORED: True
-      RUN_PERIODIC_RESCANS: '
-        {
-        "SONARR": {"MISSING": true, "CUTOFF_UNMET": true, "MAX_CONCURRENT_SCANS": 3, "MIN_DAYS_BEFORE_RESCAN": 7},
-        "RADARR": {"MISSING": true, "CUTOFF_UNMET": true, "MAX_CONCURRENT_SCANS": 3, "MIN_DAYS_BEFORE_RESCAN": 7}
-        }'
-      # Feature Settings
-      PERMITTED_ATTEMPTS: 3
-      NO_STALLED_REMOVAL_QBIT_TAG: Don't Kill
-      MIN_DOWNLOAD_SPEED: 100
-      FAILED_IMPORT_MESSAGE_PATTERNS: '
-        [
-        "Not a Custom Format upgrade for existing",
-        "Not an upgrade for existing"
-        ]'
-      ## Radarr
-      RADARR_URL: http://radarr:7878
-      RADARR_KEY: $RADARR_KEY
-      ## Sonarr
-      SONARR_URL: http://sonarr:8989
-      SONARR_KEY: $SONARR_KEY
-      ## Lidarr
-      LIDARR_URL: http://lidarr:8686
-      LIDARR_KEY: $LIDARR_KEY
-      ## Readarr
-      READARR_URL: http://readarr:8787
-      READARR_KEY: $READARR_KEY
-      ## qBitorrent
-      QBITTORRENT_URL: http://qbittorrent:8080
-      QBITTORRENT_USERNAME: $QBIT_USER
-      QBITTORRENT_PASSWORD: $QBIT_PASS
-    networks:
-      - starr
+  # decluttarr:
+  #   image: ghcr.io/manimatter/decluttarr:latest
+  #   container_name: decluttarr
+  #   restart: unless-stopped
+  #   environment:
+  #     TZ: ${TZ}
+  #     PUID: ${PUID}
+  #     PGID: ${PGID}
+  #     ## General
+  #     # TEST_RUN=True
+  #     # SSL_VERIFICATION=False
+  #     LOG_LEVEL: INFO
+  #     ## Features
+  #     REMOVE_TIMER: 10
+  #     REMOVE_FAILED: True
+  #     REMOVE_FAILED_IMPORTS: True
+  #     REMOVE_METADATA_MISSING: True
+  #     REMOVE_MISSING_FILES: True
+  #     REMOVE_ORPHANS: True
+  #     REMOVE_SLOW: True
+  #     REMOVE_STALLED: True
+  #     REMOVE_UNMONITORED: True
+  #     RUN_PERIODIC_RESCANS: '
+  #       {
+  #       "SONARR": {"MISSING": true, "CUTOFF_UNMET": true, "MAX_CONCURRENT_SCANS": 3, "MIN_DAYS_BEFORE_RESCAN": 7},
+  #       "RADARR": {"MISSING": true, "CUTOFF_UNMET": true, "MAX_CONCURRENT_SCANS": 3, "MIN_DAYS_BEFORE_RESCAN": 7}
+  #       }'
+  #     # Feature Settings
+  #     PERMITTED_ATTEMPTS: 3
+  #     NO_STALLED_REMOVAL_QBIT_TAG: Don't Kill
+  #     MIN_DOWNLOAD_SPEED: 100
+  #     FAILED_IMPORT_MESSAGE_PATTERNS: '
+  #       [
+  #       "Not a Custom Format upgrade for existing",
+  #       "Not an upgrade for existing"
+  #       ]'
+  #     ## Radarr
+  #     RADARR_URL: http://radarr:7878
+  #     RADARR_KEY: $RADARR_KEY
+  #     ## Sonarr
+  #     SONARR_URL: http://sonarr:8989
+  #     SONARR_KEY: $SONARR_KEY
+  #     ## Lidarr
+  #     LIDARR_URL: http://lidarr:8686
+  #     LIDARR_KEY: $LIDARR_KEY
+  #     ## Readarr
+  #     READARR_URL: http://readarr:8787
+  #     READARR_KEY: $READARR_KEY
+  #     ## qBitorrent
+  #     QBITTORRENT_URL: http://qbittorrent:8080
+  #     QBITTORRENT_USERNAME: $QBIT_USER
+  #     QBITTORRENT_PASSWORD: $QBIT_PASS
+  #   networks:
+  #     - starr
 
 networks:
-  proxy:
-    external: true
   starr:
     external: true
