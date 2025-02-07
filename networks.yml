@@ -3,7 +3,7 @@ services:
     image: hello-world
     networks:
       starr:
-        ipv4_address: 172.20.0.26
+        ipv4_address: 172.20.0.14
 
 networks:
   starr:
@@ -11,3 +11,4 @@ networks:
     ipam:
       config:
         - subnet: 172.20.0.0/28 # IP range for the network
+        - gateway: 172.20.0.1
