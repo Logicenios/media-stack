@@ -1,25 +1,57 @@
 services:
-  #Qbittorent - torrenting software
-  qbittorrent:
-    image: lscr.io/linuxserver/qbittorrent:latest
+  # #Qbittorent - torrenting software
+  # qbittorrent:
+  #   image: lscr.io/linuxserver/qbittorrent:latest
+  #   container_name: qbittorrent
+  #   environment:
+  #     - PUID=${PUID}
+  #     - PGID=${PGID}
+  #     #- UMASK=002
+  #     - TZ=${TZ}
+  #     - WEBUI_PORT=8080
+  #     - TORRENTING_PORT=62418
+  #   volumes:
+  #     - ${BASE_PATH}/qbittorent/config:/config
+  #     - ${MEDIA_SHARE}:/data
+  #   ports:
+  #     - 8080:8080 #WebUI port
+  #     - 62418:6881 #Torrenting port
+  #     - 62418:6881/udp #Torrenting port with udp
+  #   networks:
+  #     - starr
+  #   restart: unless-stopped
+
+  qbittorrent-nox:
+    # for debugging
+    #cap_add:
+    #- SYS_PTRACE
     container_name: qbittorrent
     environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
-      #- UMASK=002
+      #- PAGID=10000
+      - PGID=${PUID}
+      - PUID=${PgID}
+      - QBT_LEGAL_NOTICE=${QBT_LEGAL_NOTICE}
+      - QBT_VERSION=latest
+      - QBT_WEBUI_PORT=8080
       - TZ=${TZ}
-      - WEBUI_PORT=8080
-      - TORRENTING_PORT=62418
+      #- UMASK=022
+    image: qbittorrentofficial/qbittorrent-nox:latest
+    ports:
+      # for bittorrent traffic
+      - 62418:62418/tcp
+      - 62418:62418/udp
+      # for WebUI
+      - 8080:8080
+    read_only: true
+    #stop_grace_period: 30m
+    tmpfs:
+      - /tmp
+    #tty: true
     volumes:
       - ${BASE_PATH}/qbittorent/config:/config
       - ${MEDIA_SHARE}:/data
-    ports:
-      - 8080:8080 #WebUI port
-      - 62418:6881 #Torrenting port
-      - 62418:6881/udp #Torrenting port with udp
     networks:
       - starr
-    restart: unless-stopped
 
 networks:
   starr:
