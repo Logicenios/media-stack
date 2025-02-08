@@ -16,6 +16,7 @@ services:
     ports:
       - 8080:8080 #WebUI port
       - 62418:62418 #Torrenting port
+      - 62418:62418/udp #Torrenting port with udp
     networks:
       - starr
     restart: unless-stopped
