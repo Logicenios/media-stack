@@ -9,13 +9,13 @@ services:
       #- UMASK=002
       - TZ=${TZ}
       - WEBUI_PORT=8080
-      - TORRENTING_PORT=8694
+      - TORRENTING_PORT=62418
     volumes:
       - ${BASE_PATH}/qbittorent/config:/config
       - ${MEDIA_SHARE}:/data
     ports:
       - 8080:8080 #WebUI port
-      - 62418:8694 #Torrenting port
+      - 62418:62418 #Torrenting port
     networks:
       - starr
     restart: unless-stopped
