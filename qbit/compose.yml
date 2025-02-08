@@ -42,7 +42,7 @@ services:
       - 62418:62418/udp
       # for WebUI
       - 8080:8080
-    read_only: true
+    #read_only: true Causes bug with the image see wiki
     #stop_grace_period: 30m
     tmpfs:
       - ${BASE_PATH}/qbittorent/tmp
