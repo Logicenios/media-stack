@@ -9,7 +9,7 @@ services:
       #- UMASK=002
       - TZ=${TZ}
       - WEBUI_PORT=8080
-      - TORRENTING_PORT=6881
+      - TORRENTING_PORT=62418
     volumes:
       - ${BASE_PATH}/qbittorent/config:/config
       - ${MEDIA_SHARE}:/data
