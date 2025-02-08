@@ -15,8 +15,8 @@ services:
       - ${MEDIA_SHARE}:/data
     ports:
       - 8080:8080 #WebUI port
-      - 62418:62418 #Torrenting port
-      - 62418:62418/udp #Torrenting port with udp
+      - 62418:6881 #Torrenting port
+      - 62418:6881/udp #Torrenting port with udp
     networks:
       - starr
     restart: unless-stopped
