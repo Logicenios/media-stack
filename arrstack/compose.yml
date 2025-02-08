@@ -110,9 +110,7 @@ services:
       - SECRET_ENCRYPTION_KEY=${SECRET_HOMARR}
     volumes:
       #- /var/run/docker.sock:/var/run/docker.sock # Optional, only if you want docker integration
-      - ${BASE_PATH}/homarr/configs:/app/data/configs
-      - ${BASE_PATH}/homarr/icons:/app/public/icons
-      - ${BASE_PATH}/homarr/data:/data
+      - ${BASE_PATH}/homarr/appdata:/appdata
     ports:
       - 80:7575
     networks:
