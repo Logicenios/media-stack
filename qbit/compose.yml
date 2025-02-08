@@ -28,9 +28,9 @@ services:
     container_name: qbittorrent
     environment:
       #- PAGID=10000
-      - PGID=${PUID}
-      - PUID=${PgID}
-      - QBT_LEGAL_NOTICE=${QBT_LEGAL_NOTICE}
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - QBT_LEGAL_NOTICE=confirm
       - QBT_VERSION=latest
       - QBT_WEBUI_PORT=8080
       - TZ=${TZ}
