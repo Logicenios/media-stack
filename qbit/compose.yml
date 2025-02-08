@@ -45,7 +45,7 @@ services:
     read_only: true
     #stop_grace_period: 30m
     tmpfs:
-      - /tmp
+      - ${BASE_PATH}/qbittorent/tmp
     #tty: true
     volumes:
       - ${BASE_PATH}/qbittorent/config:/config
