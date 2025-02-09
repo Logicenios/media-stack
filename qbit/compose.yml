@@ -1,26 +1,4 @@
 services:
-  # #Qbittorent - torrenting software
-  # qbittorrent:
-  #   image: lscr.io/linuxserver/qbittorrent:latest
-  #   container_name: qbittorrent
-  #   environment:
-  #     - PUID=${PUID}
-  #     - PGID=${PGID}
-  #     #- UMASK=002
-  #     - TZ=${TZ}
-  #     - WEBUI_PORT=8080
-  #     - TORRENTING_PORT=62418
-  #   volumes:
-  #     - ${BASE_PATH}/qbittorent/config:/config
-  #     - ${MEDIA_SHARE}:/data
-  #   ports:
-  #     - 8080:8080 #WebUI port
-  #     - 62418:6881 #Torrenting port
-  #     - 62418:6881/udp #Torrenting port with udp
-  #   networks:
-  #     - starr
-  #   restart: unless-stopped
-
   qbittorrent-nox:
     # for debugging
     #cap_add:
@@ -38,12 +16,12 @@ services:
     image: qbittorrentofficial/qbittorrent-nox:latest
     ports:
       # for bittorrent traffic
-      - 62418:62418/tcp
-      - 62418:62418/udp
+      - ${IP}:62418:62418/tcp
+      - ${IP}:62418:62418/udp
       # for WebUI
-      - 8080:8080
+      - ${IP}:8080:8080
     #read_only: true Causes bug with the image see wiki
-    #stop_grace_period: 30m
+    stop_grace_period: 1m
     tmpfs:
       - ${BASE_PATH}/qbittorent/tmp
     #tty: true
