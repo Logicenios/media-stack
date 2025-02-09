@@ -12,7 +12,7 @@ services:
       - ${BASE_PATH}/radarr/config:/config
       - ${MEDIA_SHARE}:/data #Access to the entire /media
     ports:
-      - 7878:7878
+      - ${IP}:7878:7878
     networks:
       - starr
     restart: unless-stopped
@@ -29,7 +29,7 @@ services:
       - ${BASE_PATH}/sonarr/config:/config
       - ${MEDIA_SHARE}:/data #Access to the entire /media
     ports:
-      - 8989:8989
+      - ${IP}:8989:8989
     networks:
       - starr
     restart: unless-stopped
@@ -46,7 +46,7 @@ services:
       - ${BASE_PATH}/lidarr/config:/config
       - ${MEDIA_SHARE}:/data
     ports:
-      - 8686:8686
+      - ${IP}:8686:8686
     networks:
       - starr
     restart: unless-stopped
@@ -62,7 +62,7 @@ services:
     volumes:
       - ${BASE_PATH}/prowlarr/config:/config
     ports:
-      - 9696:9696
+      - ${IP}:9696:9696
     networks:
       - starr
     restart: unless-stopped
@@ -81,7 +81,7 @@ services:
     networks:
       - starr
     ports:
-      - 5055:5055
+      - ${IP}:5055:5055
     restart: unless-stopped
 
   #Bazarr - for subtitles. Try to use SRT format if you can rather than PGS due to performance issues
@@ -97,7 +97,7 @@ services:
       - ${BASE_PATH}/bazarr/config:/config
       - ${MEDIA_SHARE}:/data
     ports:
-      - 6767:6767
+      - ${IP}:6767:6767
     networks:
       - starr
 
@@ -112,7 +112,7 @@ services:
       #- /var/run/docker.sock:/var/run/docker.sock # Optional, only if you want docker integration
       - ${BASE_PATH}/homarr/appdata:/appdata
     ports:
-      - 80:7575
+      - ${IP}:80:7575
     networks:
       - starr
 
