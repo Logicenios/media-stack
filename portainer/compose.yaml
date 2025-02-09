@@ -5,8 +5,8 @@ services:
     restart: unless-stopped
     command: -H unix:///var/run/docker.sock
     ports:
-      - "9000:9000" # Portainer UI (HTTP)
+      - ${IP}:9000:9000 # Portainer UI (HTTP)
       #- "9443:9443"   # Portainer UI (HTTPS)
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - /home/p2pakias/containers/portainer:/data
+      - ${BASE_PATH}/portainer:/data
