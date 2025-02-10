@@ -129,7 +129,7 @@ services:
     ports:
       - "8081:8081"
     volumes:
-      - ${MEDIA_SHARE}/media/ytd:/downloads
+      - ${MEDIA_SHARE}/ytd:/downloads
 
   # #Unpacker - Used to unzip zipped files
   # unpackerr:
