@@ -27,6 +27,10 @@ services:
       - WUD_REGISTRY_LSCR_PRIVATE_TOKEN=${LSCR_Token}
       - WUD_REGISTRY_GHCR_PRIVATE_USERNAME=${GHCR_Username}
       - WUD_REGISTRY_GHCR_PRIVATE_TOKEN=${GHCR_Token}
+      - WUD_REGISTRY_HUB_PUBLIC_LOGIN=${HUB_Username}
+      - WUD_REGISTRY_HUB_PUBLIC_TOKEN=${HUB_Token}
+      
+      
       - WUD_WATCHER_LOCAL_CRON=15 06 */8 * *
       - TZ=${TZ}
       
