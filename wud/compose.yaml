@@ -6,8 +6,16 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ../qbit/compose.yml:/wud/qbit.yml
+      - ../arrstack/compose.yml:/wud/arrstack.yml
+      - ./compose.yml:/wud/wud.yml
     ports:
       - 3000:3000
     environment:
       - WUD_TRIGGER_DOCKERCOMPOSE_qBittorent_FILE=/wud/qbit.yml
       - WUD_TRIGGER_DOCKERCOMPOSE_qBittorent_PRUNE=true
+      - WUD_TRIGGER_DOCKERCOMPOSE_arrstack_FILE=/wud/arrstack.yml
+      - WUD_TRIGGER_DOCKERCOMPOSE_arrstack_PRUNE=true
+      - WUD_TRIGGER_DOCKERCOMPOSE_portainer_FILE=/wud/portainer.yml
+      - WUD_TRIGGER_DOCKERCOMPOSE_portainer_PRUNE=true
+      - WUD_TRIGGER_DOCKERCOMPOSE_wud_FILE=/wud/wud.yml
+      - WUD_TRIGGER_DOCKERCOMPOSE_wud_PRUNE=true
