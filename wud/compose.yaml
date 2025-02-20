@@ -7,7 +7,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - ../qbit/compose.yml:/wud/qbit.yml
       - ../arrstack/compose.yml:/wud/arrstack.yml
-      - ./compose.yml:/wud/wud.yml
+      - .compose.yaml:/wud/wud.yml
     ports:
       - 3000:3000
     environment:
@@ -19,3 +19,7 @@ services:
       - WUD_TRIGGER_DOCKERCOMPOSE_portainer_PRUNE=true
       - WUD_TRIGGER_DOCKERCOMPOSE_wud_FILE=/wud/wud.yml
       - WUD_TRIGGER_DOCKERCOMPOSE_wud_PRUNE=true
+      - WUD_TRIGGER_GOTIFY_ST_URL=${GOTIFY_URL}
+      - WUD_TRIGGER_GOTIFY_ST_TOKEN=${GOTIFY_ST}
+      - WUD_TRIGGER_GOTIFY_PN_URL=${GOTIFY_URL}
+      - WUD_TRIGGER_GOTIFY_PN_TOKEN=${GOTIFY_PN}
