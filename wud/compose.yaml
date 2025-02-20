@@ -5,5 +5,9 @@ services:
     restart: unless-stopped
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+      - ../qbit/compose.yml:/wud/qbit.yml
     ports:
       - 3000:3000
+    environment:
+      - WUD_TRIGGER_DOCKERCOMPOSE_qBittorent_FILE=/wud/qbit.yml
+      - WUD_TRIGGER_DOCKERCOMPOSE_qBittorent_PRUNE=true
