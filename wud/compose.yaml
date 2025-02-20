@@ -7,7 +7,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - ../qbit/compose.yml:/wud/qbit.yml
       - ../arrstack/compose.yml:/wud/arrstack.yml
-      - .compose.yaml:/wud/wud.yml
+      - compose.yaml:/wud/wud.yml
     ports:
       - 3000:3000
     environment:
