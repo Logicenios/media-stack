@@ -139,6 +139,22 @@ services:
     volumes:
       - ${MEDIA_SHARE}/ytd:/downloads
 
+  maintainerr:
+    image: ghcr.io/maintainerr/maintainerr:latest
+    container_name: maintainerr
+    user: ${PUID}:${PGID}
+    restart: unless-stopped
+    environment:
+      - TZ=${TZ}
+    ports:
+      - ${IP}:6246:6246
+    volumes:
+    - type: bind
+      source: ${BASE_PATH}/maintainerr/config
+      target: /opt/data
+    networks:
+      - starr
+      
   # #Unpacker - Used to unzip zipped files
   # unpackerr:
   #   image: ghcr.io/hotio/unpackerr:latest
