@@ -1,76 +1,86 @@
-# The Ultimate Jellyfin Stack!
+# Media Stack
 
-Welcome to my Jellyfin stack repository! This repository showcases my Docker Compose setup for managing various media-related services using Docker containers. The compose file is meant to be changed to each users liking as I know not everyone has the same requirements. Hope you enjoy!
+My Docker Compose setup for automating a Jellyfin media library. It is split into separate stacks so each can be started, updated and torn down on its own. Change it to your liking, not everyone has the same requirements.
 
-## Overview
+Forked from [Wh1rr/ultimate-jellyfin-stack](https://github.com/Wh1rr/ultimate-jellyfin-stack).
 
-This Plex Stack includes the following services:
+## Stacks and services
 
-- **Jellyfin:** Media server for streaming movies and TV shows.
-- **Radarr:** Movie management and automation.
-- **Sonarr:** TV show management and automation.
-- **Readarr:** Used to grab books and audiobooks.
-- **Lidarr:** Used to grab music.
-- **Kapowarr** Used to grab comics.
-- **Prowlarr:** Indexer manager for Radarr and Sonarr.
-- **Jellyseerr:** Request management and monitoring for Jellyfin.
-- **Gluetun:** VPN container with WireGuard support for secure browsing.
-- **Qbittorrent:** BitTorrent client with VPN support.
-- **Tdarr:** Pre-transcodes your media to decrease file sizes
-- **Bazarr:** Subtitle management for movies and TV shows.
-- **Autobrr:** Used to grab torrents immediately as they are released.
-- **Flaresolverr:** Used as a proxy server to bypass Cloudflare and DDoS-GUARD protection.
-- **Dozzle:** Used to view the logs of any container.
-- **Wizarr:** Used to create links that can be sent to users so they can be invited to your media server.
-- **Homarr:** Used as a dashboard for docker containers with integrations for the *arr, torrent, and Jellyfin apps.
-- **Decluttarr:** Used to maintain/clean your *arr app queues and downloads.
-- **Jellystat:** Used to monitor the usage of each user or content on your jellyfin server.
+| Folder | Service | Port | What it does |
+|---|---|---|---|
+| `qbit/` | **qBittorrent** | 8080 | BitTorrent client |
+| `arrstack/` | **Radarr** | 7878 | Movie management and automation |
+| | **Sonarr** | 8989 | TV show management and automation |
+| | **Lidarr** | 8686 | Music management and automation |
+| | **Prowlarr** | 9696 | Indexer manager for the *arr apps |
+| | **Seerr** | 5055 | Lets users request media (successor to Jellyseerr) |
+| | **Bazarr** | 6767 | Subtitle management for movies and TV shows |
+| | **Homarr** | 80 | Dashboard with *arr, torrent and Jellyfin integrations |
+| | **MeTube** | 8081 | Web UI for yt-dlp, downloads into `ytd/` |
+| | **Maintainerr** | 6246 | Rule-based cleanup of watched/old media |
+| `arcane/` | **Arcane** | 3552 | Docker GUI, manages the stacks in this repo as projects and keeps their images updated |
 
-![containers](https://github.com/user-attachments/assets/855014b1-2716-4370-975d-a02564df881e)
+Unpackerr and Decluttarr are included in `arrstack/compose.yml` but commented out.
+
+Jellyfin itself is not part of this repo.
 
 ## Dependencies
 
 1. Linux
 2. Docker / Docker Compose
-3. OPTIONAL: Portainer - Docker GUI
 
-## How to Use - Using portainer
-1. Create a new stack using the Repository build method
-2. Add this link `https://github.com/Wh1rr/ultimate-jellyfin-stack/blob/main/docker-compose.yml` as repository URL
-3. Add your environment variables using the below examples.
+## How to use
 
-## Example of Environment variables in Portainer
-Keep in mind some variable names have changed since this screenshot was taken
-![jellyfin-stack](https://github.com/user-attachments/assets/1b984a6f-df7f-46c9-9dd1-54c62b6854a6)
+1. Create the shared network once. All stacks join it, so they can reach each other by container name (e.g. `http://qbittorrent:8080`):
+   ```sh
+   docker network create starr
+   ```
+2. In each stack folder copy `.env.example` to `.env` and fill it in. `.env` files are git-ignored.
+3. Start the stacks:
+   ```sh
+   docker compose -f qbit/compose.yml up -d
+   docker compose -f arrstack/compose.yml up -d
+   docker compose -f arcane/compose.yaml up -d
+   ```
 
-  
-File location examples:
-- {MEDIA_SHARE} = ~/Jellyfin/share
-- {BASE_PATH} = ~/Jellyfin/home
+Arcane mounts the repo checkout (`PROJECTS_DIR`), so every stack folder shows up there as a project you can start, stop and redeploy. The default login is `arcane` / `arcane-admin` and has to be changed on first sign-in.
 
-To allow hardlinking to work (which you will definitely want!) you will have to use the same root folder in all of your container path. In this example we use "/share", so in the container it will look like "/share/downloads/tv"
+To keep the images updated, enable **Image Update Watcher** and **Auto Update** under Environments → Automations. Arcane itself is updated from the Updates page with **Update All**.
 
-An example folder structure:  
+## Environment variables
+
+- `IP`: host IP the web UIs bind to
+- `PUID` / `PGID`: user and group the containers run as
+- `BASE_PATH`: where app configs are stored, e.g. `~/media/config`
+- `MEDIA_SHARE`: root folder for downloads and media, e.g. `~/media/data`
+
+See each stack's `.env.example` for the full list.
+
+## Folder structure and hardlinks
+
+To allow hardlinking to work (which you will definitely want!) every container must see downloads and media under the same root folder. Here `${MEDIA_SHARE}` is mounted as `/data` everywhere, so in the container a path looks like `/data/downloads/tv` or `/data/media/tv`.
+
+An example folder structure:
 ![image](https://github.com/DonMcD/ultimate-plex-stack/assets/90471623/2003ac26-a929-4ff6-ad67-e35fc51fb51a)
-  
-- Feel free to expand your folders to also include "books" or "music" as you need for your setup
-  
+
+Feel free to add folders like `music` as you need for your setup.
+
 ## Starr apps
+
 Setting up the starr apps might be a bit confusing the first time, but to keep it simple:
-1. Prowlarr manages the indexes for *some* starr apps (radarr and sonarr)
-2. The following starr apps make use of the download client (qBittorent) to download their respective content type:
+1. Prowlarr manages the indexers and syncs them to Radarr, Sonarr and Lidarr
+2. Those apps send their downloads to qBittorrent:
    1. Radarr - Movies
    2. Sonarr - TV Shows
    3. Lidarr - Music
-   4. Readarr - Books
-   5. Kapowarr - Comics
-3. Jellyseer is a platform which combines the request system in radarr and sonarr to make a nice UI/UX to find and auto download the content.
-  
-Anytime you reference your media folder in a container you want the path to look like /share/media/tv instead of /tv like a lot of the default guides say, if you do end up mapping the path as /tv hardlinking will not work
+3. Seerr combines the request systems of Radarr and Sonarr in a nice UI to find and auto download content.
+4. Maintainerr removes old or watched media. Set its rules to unmonitor what they delete, otherwise Radarr/Sonarr will download it again.
+
+Anytime you reference your media folder in a container you want the path to look like `/data/media/tv` instead of `/tv` like a lot of the default guides say. If you map the path as `/tv` hardlinking will not work.
 
 ## Recommendations
 
 1. Get familiar with reverse proxies
-2. Install portainer to manage and monitor containers
-3. Use Cloudflare tunnels
-
+2. Use a VPN for torrent traffic (e.g. Gluetun)
+3. For remote access prefer Tailscale over exposing ports
+4. Back up `${BASE_PATH}` regularly, Arcane updates the images automatically
