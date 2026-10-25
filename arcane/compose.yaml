@@ -3,6 +3,11 @@ services:
     image: ghcr.io/getarcaneapp/manager:latest
     container_name: arcane
     restart: unless-stopped
+    logging:
+      driver: local
+      options:
+        max-size: 10m
+        max-file: "3"
     ports:
       - ${IP}:3552:3552
     volumes:
