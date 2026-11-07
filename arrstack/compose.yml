@@ -67,6 +67,7 @@ services:
       - ${MEDIA_SHARE}/media/music:/app/Transfer
       - ${MEDIA_SHARE}/downloads/import:/app/Staging
       - ${MEDIA_SHARE}/media/musicvideos:/app/MusicVideos
+      - ${MEDIA_SHARE}/media/playlists:/app/Playlists
     ports:
       - ${IP}:8008:8008
       - ${IP}:8888:8888 #Spotify OAuth callback
