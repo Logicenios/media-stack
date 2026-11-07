@@ -70,7 +70,6 @@ services:
       - ${MEDIA_SHARE}/media/playlists:/app/Playlists
     ports:
       - ${IP}:8008:8008
-      - ${IP}:8888:8888 #Spotify OAuth callback
     networks:
       - starr
     healthcheck:
