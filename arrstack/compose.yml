@@ -44,21 +44,33 @@ services:
         max-size: 10m
         max-file: "3"
 
-  #Lidarr - Used to download music
-  lidarr:
-    image: lscr.io/linuxserver/lidarr:latest
-    container_name: lidarr
+  #SoulSync - Spotify replacement: playlist sync, discovery, downloading and tagging for music
+  soulsync:
+    image: boulderbadgedad/soulsync:latest
+    container_name: soulsync
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
+      - UMASK=022
       - TZ=${TZ}
+      - PYTHONPATH=/app
+      - SOULSYNC_CONFIG_PATH=/app/config/config.json
     volumes:
-      - ${BASE_PATH}/lidarr/config:/config
-      - ${MEDIA_SHARE}:/data
+      - ${BASE_PATH}/soulsync/config:/app/config
+      - ${BASE_PATH}/soulsync/logs:/app/logs
+      - ${BASE_PATH}/soulsync/data:/app/data
+      - ${MEDIA_SHARE}:/data #Access to the entire /media
     ports:
-      - ${IP}:8686:8686
+      - ${IP}:8008:8008
+      - ${IP}:8888:8888 #Spotify OAuth callback
     networks:
       - starr
+    healthcheck:
+      test: ["CMD", "curl", "-f", "--max-time", "5", "http://localhost:8008/api/startup-status"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
     restart: unless-stopped
     logging:
       driver: local
@@ -278,9 +290,6 @@ services:
   #     ## Sonarr
   #     SONARR_URL: http://sonarr:8989
   #     SONARR_KEY: $SONARR_KEY
-  #     ## Lidarr
-  #     LIDARR_URL: http://lidarr:8686
-  #     LIDARR_KEY: $LIDARR_KEY
   #     ## Readarr
   #     READARR_URL: http://readarr:8787
   #     READARR_KEY: $READARR_KEY
