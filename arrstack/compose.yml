@@ -59,7 +59,14 @@ services:
       - ${BASE_PATH}/soulsync/config:/app/config
       - ${BASE_PATH}/soulsync/logs:/app/logs
       - ${BASE_PATH}/soulsync/data:/app/data
+      - ${BASE_PATH}/soulsync/storage:/app/storage #Playlist covers, avatars, album staging
+      - ${BASE_PATH}/soulsync/scripts:/app/scripts
       - ${MEDIA_SHARE}:/data #Access to the entire /media
+      #The image's default folders. Mapped to the same host folders as the /data paths set in the app, so nothing lands in a hidden Docker volume
+      - ${MEDIA_SHARE}/downloads/music:/app/downloads
+      - ${MEDIA_SHARE}/media/music:/app/Transfer
+      - ${MEDIA_SHARE}/downloads/import:/app/Staging
+      - ${MEDIA_SHARE}/media/musicvideos:/app/MusicVideos
     ports:
       - ${IP}:8008:8008
       - ${IP}:8888:8888 #Spotify OAuth callback
