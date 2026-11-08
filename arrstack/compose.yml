@@ -70,6 +70,7 @@ services:
       - ${MEDIA_SHARE}/media/playlists:/app/Playlists
     ports:
       - ${IP}:8008:8008
+      - ${IP}:8889:8889 #Tidal OAuth callback, only needed for the Client ID/Secret login
     networks:
       - starr
     healthcheck:
